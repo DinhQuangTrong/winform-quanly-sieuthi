@@ -1,0 +1,26 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache/options directory
+.vs/
+
+# Backup & log files
+*.log
+*.tmp
+*.bak
+*.ncb
+*.cache
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# Others
+Thumbs.db
