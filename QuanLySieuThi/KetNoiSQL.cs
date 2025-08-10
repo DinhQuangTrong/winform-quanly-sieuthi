@@ -7,13 +7,15 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Drawing;
 
 
 namespace QuanLySieuThi
 {
-    internal class KetNoiSQL
+    public class KetNoiSQL
     {
-        public static string sqlCon = @"Data Source=LAPTOP-8N0VFK20\SQLEXPRESS;Initial Catalog=QuanLyST;Integrated Security=True";
+        public static string sqlCon = @"Data Source=DESKTOP-3LJII6Q\SQLEXPRESS;Initial Catalog=QuanLyST;Integrated Security=True;Encrypt=False";
         public static SqlConnection myCon = new SqlConnection(sqlCon);
 
         
@@ -22,7 +24,7 @@ namespace QuanLySieuThi
         public static DataTable dt;
 
         public static SqlCommandBuilder sqlCB;
-        public static SqlDataReader showtext(string sql)
+        public static SqlDataReader Showtext(string sql)
         {
             SqlDataReader read = null;
             try
@@ -38,7 +40,7 @@ namespace QuanLySieuThi
             return read;
         }
         // ham ket noi
-        public static void Chuoiketnoi(string chuoi, DataGridView dtgv)
+        public static void ChuoiKetNoi(string chuoi, DataGridView dtgv)
         {
             try
             {
@@ -56,15 +58,34 @@ namespace QuanLySieuThi
 
         public static void LamMoi(string sql, DataGridView dtgv)
         {
+
             try
             {
+                sqlADT = new SqlDataAdapter(sql, myCon);
+                sqlCB = new SqlCommandBuilder(sqlADT);
+                DataTable dt = new DataTable();
+                sqlADT.Fill(dt);
+                dtgv.DataSource = dt;
+                MessageBox.Show("Làm mới thành công !", "Thông báo ");
+                myCon.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "" + ex);
+            }
+        }
+
+        public static void ClickDTGV(string sql, DataGridView dtgv)
+        {
+            try
+            {
+                myCon = new SqlConnection(sqlCon);
                 myCon.Open();
-                sqlCom = new SqlCommand(sql,myCon);
+                sqlCom = new SqlCommand(sql, myCon);
                 sqlADT = new SqlDataAdapter(sqlCom);
                 DataTable dt = new DataTable();
                 sqlADT.Fill(dt);
                 dtgv.DataSource = dt;
-                MessageBox.Show("Lam moi Thanh công !", "Thông báo ");
                 myCon.Close();
             }
             catch (Exception ex)
@@ -82,10 +103,11 @@ namespace QuanLySieuThi
                 myCon.Open();
                 sqlCom = new SqlCommand(sql, myCon);
                 sqlADT = new SqlDataAdapter(sqlCom);
+                
                 DataTable dt = new DataTable();
                 sqlADT.Fill(dt);
                 dtgv.DataSource = dt;
-                MessageBox.Show("Them Thanh công !", "Thông báo ");
+                MessageBox.Show("Thêm thành công !", "Thông báo ", MessageBoxButtons.OK);
                 myCon.Close();
             }
             catch (Exception ex)
@@ -100,12 +122,13 @@ namespace QuanLySieuThi
             {
 
                 try
-                {             
+                {
+                    myCon = new SqlConnection(sqlCon);
+
                     myCon.Open();
                     sqlCom = new SqlCommand(sql, myCon);
-                    sqlCom.ExecuteNonQuery();
-                    myCon.Close();
                     MessageBox.Show("Bạn xóa thành công ! ", "Thông báo", MessageBoxButtons.OK);
+                    sqlCom.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -122,6 +145,7 @@ namespace QuanLySieuThi
 
                 try
                 {
+                    myCon = new SqlConnection(sqlCon);
                     myCon.Open();
                     sqlCom = new SqlCommand(sql, myCon);
                     sqlCom.ExecuteNonQuery();
@@ -136,22 +160,22 @@ namespace QuanLySieuThi
             }
         }
 
-        public static void KhoiTaoBang(string sql,DataGridView dtgv)
-        {
-            try
-            {
-                sqlADT = new SqlDataAdapter(sql, myCon);
-                sqlCB = new SqlCommandBuilder(sqlADT);
-                DataTable dt = new DataTable();
-                sqlADT.Fill(dt);
-                dtgv.DataSource = dt;
+        public static void CapNhatSoLuongTon(string sql)
+        {       
+                try
+                {
+                    myCon = new SqlConnection(sqlCon);
+                    myCon.Open();
+                    sqlCom = new SqlCommand(sql, myCon);
+                    sqlCom.ExecuteNonQuery();
+                    myCon.Close();                
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("" + ex);
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("" + ex);
-
-            }
+                }
+            
         }
 
         public static void TimKiem(string sql, DataGridView dtgv)
@@ -175,16 +199,104 @@ namespace QuanLySieuThi
  
         }
 
-
-        public static void xulycbx(string chuoi, ComboBox cbx)
+        public static void XuLyCBX(string sql, ComboBox cbx, string tenCot)
         {
-            sqlADT = new SqlDataAdapter(chuoi, sqlCon);
-
+            sqlADT = new SqlDataAdapter(sql, sqlCon);
+            DataTable dt = new DataTable();
             sqlADT.Fill(dt);
             cbx.DataSource = dt;
+            cbx.DisplayMember = tenCot;
+            cbx.ValueMember = tenCot;
+        }
 
+        public static void XuLyCBX(string sql, ComboBox cbx, string tenBang, string tenCot)
+        {
+            sqlADT = new SqlDataAdapter(sql, sqlCon);
+            DataTable dt = new DataTable();
+            sqlADT.Fill(dt);
+            cbx.DataSource = dt;
+            cbx.DisplayMember = tenCot;
+            cbx.ValueMember = tenBang;
 
         }
 
+
+        public static int Dem(string sql)
+        {
+            int count = 0;
+            try
+            {
+                myCon = new SqlConnection(sqlCon);
+                myCon.Open();
+                sqlCom = new SqlCommand(sql, myCon);
+                count = Convert.ToInt32(sqlCom.ExecuteScalar());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex);
+            }
+            finally
+            {
+                myCon.Close();
+            }
+            return count;
+        }
+
+        public static bool KiemTraDangNhap(string taiKhoan, string matKhau)
+        {
+            string query = "SELECT COUNT(*) FROM TaiKhoan WHERE taikhoan = @TaiKhoan AND matKhau = @MatKhau";
+
+            using (SqlConnection connection = new SqlConnection(sqlCon))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
+                    command.Parameters.AddWithValue("@MatKhau", matKhau);
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            int count = Convert.ToInt32(result);
+                            return count > 0;
+                        }
+                        else
+                        {
+                            // Trường hợp không có kết quả trả về từ câu truy vấn
+                            return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi kết nối cơ sở dữ liệu: " + ex.Message);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public static void Luu(string sql, DataGridView dtgv)
+        {
+
+            try
+            {
+                sqlADT = new SqlDataAdapter(sql, myCon);
+                sqlCB = new SqlCommandBuilder(sqlADT);
+                DataTable dt = new DataTable();
+                sqlADT.Fill(dt);
+                dtgv.DataSource = dt;
+                MessageBox.Show("Lưu thành công !", "Thông báo ");
+                myCon.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "" + ex);
+            }
+        }
+
+
     }
+
 }

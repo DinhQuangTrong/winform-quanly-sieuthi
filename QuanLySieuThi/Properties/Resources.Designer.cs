@@ -203,6 +203,16 @@ namespace QuanLySieuThi.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_excel_16 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-excel-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_handle_with_care_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8-handle-with-care-32", resourceCulture);
@@ -336,6 +346,16 @@ namespace QuanLySieuThi.Properties {
         internal static System.Drawing.Bitmap icons8_user_group_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8-user-group-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Luu {
+            get {
+                object obj = ResourceManager.GetObject("Luu", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
